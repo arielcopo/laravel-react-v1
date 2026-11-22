@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
 import type { Auth } from '@/types';
 import { type SubmitEvent, useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ interface Item {
 }
 
 export default function Welcome() {
-    const { auth } = usePage<{ auth: Auth }>().props;
+    const { auth, items } = usePage<{ auth: Auth; items: Item[] }>().props;
 
     // --- START: Add dark mode state & effect here ---
     const [isDark, setIsDark] = useState<boolean>(() => {
@@ -37,23 +37,22 @@ export default function Welcome() {
     }, [isDark]);
 
     const toggleTheme = () => setIsDark((prev) => !prev);
-    // --- END: Dark mode state & effect ---//
+    // --- END: Dark mode state & effect --- 
 
     const [title, setTitle] = useState('');
-
-    const [items, setItems] = useState<Item[]>([]);
 
     const handleCreate = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!title.trim()) return;
 
-        const newItem: Item = {
-            id: Date.now(),
-            title: title.trim(),
-        };
-
-        setItems([newItem, ...items]);
-        setTitle('');
+        router.post(
+            '/items',
+            { title: title.trim() },
+            {
+                preserveScroll: true,
+                onSuccess: () => setTitle(''),
+            }
+        );
     };
 
     const [editingId, setEditingId] = useState<number | null>(null);
@@ -67,16 +66,20 @@ export default function Welcome() {
     const handleUpdate = (id: number) => {
         if (!editTitle.trim()) return;
 
-        setItems(
-            items.map((item) =>
-                item.id === id ? { ...item, title: editTitle.trim() } : item
-            )
+        router.put(
+            `/items/${id}`,
+            { title: editTitle.trim() },
+            {
+                preserveScroll: true,
+                onSuccess: () => setEditingId(null),
+            }
         );
-        setEditingId(null);
     };
 
     const handleDelete = (id: number) => {
-        setItems(items.filter((item) => item.id !== id));
+        router.delete(`/items/${id}`, {
+            preserveScroll: true,
+        });
     };
 
     return (
