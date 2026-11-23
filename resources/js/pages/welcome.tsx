@@ -1,12 +1,11 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { dashboard, login, register } from '@/routes';
-import type { Auth } from '@/types';
-import { type SubmitEvent, useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Check, Moon, Pencil, Sun, Trash2, X } from 'lucide-react';
-
+import { Head, Link, usePage } from "@inertiajs/react";
+import { dashboard, login, register } from "@/routes";
+import type { Auth } from "@/types";
+import { type SubmitEvent, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Check, Moon, Pencil, Sun, Trash2, X } from "lucide-react";
 
 interface Item {
     id: number;
@@ -18,28 +17,28 @@ export default function Welcome() {
 
     // --- START: Add dark mode state & effect here ---
     const [isDark, setIsDark] = useState<boolean>(() => {
-        if (typeof window === 'undefined') return false;
-        const saved = localStorage.getItem('appearance');
-        if (saved === 'dark') return true;
-        if (saved === 'light') return false;
-        return document.documentElement.classList.contains('dark');
+        if (typeof window === "undefined") return false;
+        const saved = localStorage.getItem("appearance");
+        if (saved === "dark") return true;
+        if (saved === "light") return false;
+        return document.documentElement.classList.contains("dark");
     });
 
     useEffect(() => {
         const root = document.documentElement;
         if (isDark) {
-            root.classList.add('dark');
-            localStorage.setItem('appearance', 'dark');
+            root.classList.add("dark");
+            localStorage.setItem("appearance", "dark");
         } else {
-            root.classList.remove('dark');
-            localStorage.setItem('appearance', 'light');
+            root.classList.remove("dark");
+            localStorage.setItem("appearance", "light");
         }
     }, [isDark]);
 
     const toggleTheme = () => setIsDark((prev) => !prev);
     // --- END: Dark mode state & effect ---//
 
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState("");
 
     const [items, setItems] = useState<Item[]>([]);
 
@@ -53,11 +52,11 @@ export default function Welcome() {
         };
 
         setItems([newItem, ...items]);
-        setTitle('');
+        setTitle("");
     };
 
     const [editingId, setEditingId] = useState<number | null>(null);
-    const [editTitle, setEditTitle] = useState('');
+    const [editTitle, setEditTitle] = useState("");
 
     const startEditing = (item: Item) => {
         setEditingId(item.id);
@@ -69,8 +68,8 @@ export default function Welcome() {
 
         setItems(
             items.map((item) =>
-                item.id === id ? { ...item, title: editTitle.trim() } : item
-            )
+                item.id === id ? { ...item, title: editTitle.trim() } : item,
+            ),
         );
         setEditingId(null);
     };
@@ -112,7 +111,11 @@ export default function Welcome() {
                         <button
                             type="button"
                             onClick={toggleTheme}
-                            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+                            aria-label={
+                                isDark
+                                    ? "Switch to light mode"
+                                    : "Switch to dark mode"
+                            }
                             className="inline-flex h-8.5 w-8.5 items-center justify-center rounded-sm border border-transparent text-[#1b1b18] hover:bg-black/5 dark:text-[#EDEDEC] dark:hover:bg-white/10"
                         >
                             {isDark ? (
@@ -139,7 +142,9 @@ export default function Welcome() {
                                         type="text"
                                         placeholder="Enter title..."
                                         value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
+                                        onChange={(e) =>
+                                            setTitle(e.target.value)
+                                        }
                                         className="flex-1"
                                     />
                                     <Button type="submit">Create</Button>
@@ -154,7 +159,8 @@ export default function Welcome() {
                             <CardContent>
                                 {items.length === 0 ? (
                                     <p className="text-sm text-muted-foreground">
-                                        No items yet. Add your first title above.
+                                        No items yet. Add your first title
+                                        above.
                                     </p>
                                 ) : (
                                     <ul className="divide-y">
@@ -169,14 +175,27 @@ export default function Welcome() {
                                                             type="text"
                                                             value={editTitle}
                                                             onChange={(e) =>
-                                                                setEditTitle(e.target.value)
+                                                                setEditTitle(
+                                                                    e.target
+                                                                        .value,
+                                                                )
                                                             }
                                                             onKeyDown={(e) => {
-                                                                if (e.key === 'Enter') {
-                                                                    handleUpdate(item.id);
+                                                                if (
+                                                                    e.key ===
+                                                                    "Enter"
+                                                                ) {
+                                                                    handleUpdate(
+                                                                        item.id,
+                                                                    );
                                                                 }
-                                                                if (e.key === 'Escape') {
-                                                                    setEditingId(null);
+                                                                if (
+                                                                    e.key ===
+                                                                    "Escape"
+                                                                ) {
+                                                                    setEditingId(
+                                                                        null,
+                                                                    );
                                                                 }
                                                             }}
                                                             className="h-8 flex-1"
@@ -187,7 +206,11 @@ export default function Welcome() {
                                                             size="icon"
                                                             variant="ghost"
                                                             className="h-8 w-8 shrink-0"
-                                                            onClick={() => handleUpdate(item.id)}
+                                                            onClick={() =>
+                                                                handleUpdate(
+                                                                    item.id,
+                                                                )
+                                                            }
                                                             aria-label="Save item"
                                                         >
                                                             <Check className="h-4 w-4" />
@@ -197,7 +220,11 @@ export default function Welcome() {
                                                             size="icon"
                                                             variant="ghost"
                                                             className="h-8 w-8 shrink-0"
-                                                            onClick={() => setEditingId(null)}
+                                                            onClick={() =>
+                                                                setEditingId(
+                                                                    null,
+                                                                )
+                                                            }
                                                             aria-label="Cancel editing"
                                                         >
                                                             <X className="h-4 w-4" />
@@ -214,7 +241,11 @@ export default function Welcome() {
                                                                 size="icon"
                                                                 variant="ghost"
                                                                 className="h-8 w-8"
-                                                                onClick={() => startEditing(item)}
+                                                                onClick={() =>
+                                                                    startEditing(
+                                                                        item,
+                                                                    )
+                                                                }
                                                                 aria-label="Edit item"
                                                             >
                                                                 <Pencil className="h-4 w-4" />
@@ -224,7 +255,11 @@ export default function Welcome() {
                                                                 size="icon"
                                                                 variant="ghost"
                                                                 className="h-8 w-8"
-                                                                onClick={() => handleDelete(item.id)}
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        item.id,
+                                                                    )
+                                                                }
                                                                 aria-label="Delete item"
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
